@@ -79,10 +79,20 @@ function Circle(x, y, radius, vx, vy, color, gravity,fraction){
     this.draw = function (){
         c.beginPath();
         c.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-        c.strokeStyle = this.color;
+        c.strokeStyle = 'black';
         c.stroke();
         c.fillStyle = this.color;
         c.fill();
+    }
+    this.putMiddle = function(){
+        this.x = innerWidth/2;
+        this.y = innerHeight/2;
+    }
+    this.resize = function(size){
+        console.log(size)
+        console.log("redius before: ", this.radius)
+        this.redius *= size
+        console.log("redius after: ", this.radius)
     }
     // this.get_distance = function(){
     //     var distance = Math.sqrt((mouse.x-this.x)**2+(mouse.y-this.y)**2);
@@ -146,6 +156,7 @@ function new_circle(){
     var my_circle = new Circle(x, y, radius, vx, vy,color,gravity,fraction)
     return my_circle;
 }
+
 function circle_group(num){
     var circles = []
     for (i=0;i<=num;i++){
@@ -157,16 +168,16 @@ function circle_group(num){
 var circles = [];
 function init(){
     circles = [];
-    circles = circle_group(400);
+    circles = circle_group(1);
 }
 // var circles = circle_group(500);
 init();
 function anime(){
     requestAnimationFrame(anime);
     c.clearRect(0, 0, innerWidth, innerHeight);
-    circles.forEach(function(circle){
-        circle.update();
-    })
+    circles[0].resize(10)
+    circles[0].putMiddle();
+    circles[0].draw();
 }
 anime();
 // function anime(){
