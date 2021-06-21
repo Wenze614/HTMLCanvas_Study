@@ -1,0 +1,25 @@
+body{
+    position: relative;
+    margin:0;
+}
+
+canvas{
+    position: absolute;
+    z-index: -1;
+}
+.input-container{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+
+}
+input{
+    position: absolute;
+    height: 10%;
+    width: 50%;
+    top:45%;
+    left:25%;
+    background-color: transparent;
+    font-size: large;
+    outline: none;
+}
