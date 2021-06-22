@@ -51,15 +51,16 @@ window.addEventListener('resize', function(){
     canvas.height = window.innerHeight;
     init();
 })
-window.addEventListener('click', function(){
-    init();
-})
+// window.addEventListener('click', function(){
+//     init();
+// })
 function Circle(x, y, radius, vx, vy, color, gravity,fraction){
     this.x = x;
     this.y = y;
     this.ori_x = x;
     this.ori_y = y;
     this.ori_radius = radius;
+    this.ori_color = color;
     this.radius = this.ori_radius;
     this.ori_vx = vx;
     this.ori_vy = vy;
@@ -89,10 +90,8 @@ function Circle(x, y, radius, vx, vy, color, gravity,fraction){
         this.y = innerHeight/2;
     }
     this.resize = function(size){
-        console.log(size)
-        console.log("redius before: ", this.radius)
-        this.redius *= size
-        console.log("redius after: ", this.radius)
+        this.radius = size;
+        this.ori_radius = size;
     }
     // this.get_distance = function(){
     //     var distance = Math.sqrt((mouse.x-this.x)**2+(mouse.y-this.y)**2);
@@ -139,6 +138,11 @@ function Circle(x, y, radius, vx, vy, color, gravity,fraction){
         this.x += this.vx;
 
     }
+    this.moveWithMouth = function(){
+        this.draw();
+        this.y = mouse.y;
+        this.x = mouse.x;
+    }
 }
 
 
@@ -168,16 +172,36 @@ function circle_group(num){
 var circles = [];
 function init(){
     circles = [];
-    circles = circle_group(1);
+    circles = circle_group(300);
 }
 // var circles = circle_group(500);
 init();
+function collision(circle1, circle2){
+    var distance = Math.sqrt((circle1.x-circle2.x)**2+(circle1.y-circle2.y)**2)
+    if (distance<circle1.radius+circle2.radius){
+        return true;
+    }
+    return false;
+}
+// circles[0].resize(100);
+// circles[0].putMiddle();
+// circles[1].resize(60);
+function collision_1(){
+    circles[0].draw();
+    circles[1].moveWithMouth();
+    if(collision(circles[0],circles[1])){
+        circles[0].color = circles[1].color;
+    }
+    else{
+        circles[0].color = circles[0].ori_color;
+    }
+}
 function anime(){
     requestAnimationFrame(anime);
     c.clearRect(0, 0, innerWidth, innerHeight);
-    circles[0].resize(10)
-    circles[0].putMiddle();
-    circles[0].draw();
+    circles.forEach(function(circle){
+        circle.update();
+    })
 }
 anime();
 // function anime(){
