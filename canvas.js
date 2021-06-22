@@ -82,8 +82,8 @@ function Circle(x, y, radius, vx, vy, color, gravity,fraction){
         c.arc(this.x, this.y, this.radius, 0, Math.PI*2);
         c.strokeStyle = 'black';
         c.stroke();
-        c.fillStyle = this.color;
-        c.fill();
+        // c.fillStyle = this.color;
+        // c.fill();
     }
     this.putMiddle = function(){
         this.x = innerWidth/2;
@@ -98,7 +98,7 @@ function Circle(x, y, radius, vx, vy, color, gravity,fraction){
     //     console.log(distance)
     //     return distance
     // }
-    this.update = function(){
+    this.mouseOverEffect = function(){
         this.draw();
         var distance = Math.sqrt((mouse.x-this.x)**2+(mouse.y-this.y)**2);
         // var condition = (mouse.x - this.x)<50 && (mouse.x - this.x) > -50 && (mouse.y -this.y) <50 && (mouse.y - this.y) > -50;
@@ -120,7 +120,7 @@ function Circle(x, y, radius, vx, vy, color, gravity,fraction){
         this.y += this.vy;
 
     }
-    this.dropDown = function(){
+    this.dropDownEffect = function(){
         this.draw();
         if(this.y+this.radius+this.vy>innerHeight||this.y-this.radius<0){
             this.vy = -this.vy*(1-this.fraction)
@@ -143,11 +143,17 @@ function Circle(x, y, radius, vx, vy, color, gravity,fraction){
         this.y = mouse.y;
         this.x = mouse.x;
     }
+    this.collidingEffect = function(circles){
+        this.draw()
+        circles.
+    }
 }
 
 
 const colors = ["#FBA922", "#F0584A", "#2B5877", "#1194A8", "#1FC7B7"];
-
+function distance(x1,y1,x2,y2){
+    return Math.sqrt((x1-x2)**2+(y1-y2)**2);
+}
 function new_circle(){
     var radius = 1+Math.random()*10;
     var x = radius+Math.random()*(innerWidth-2*radius);
@@ -160,11 +166,37 @@ function new_circle(){
     var my_circle = new Circle(x, y, radius, vx, vy,color,gravity,fraction)
     return my_circle;
 }
+function circlesNoOverlapping(size){
+    var circles = []
+    for (i = 0; i< size; i++){
+        var radius = 1+Math.random()*10;
+        var x = radius+Math.random()*(innerWidth-2*radius);
+        var y = radius+Math.random()*(innerHeight-2*radius);
+        if (i !== 0){
+            for(j = 0; j < circles.length; j++){
+                if(distance(circles[j].x, circles[j].y, x, y)<circles[j].radius+radius){
+                    var x = radius+Math.random()*(innerWidth-2*radius);
+                    var y = radius+Math.random()*(innerHeight-2*radius);
+                    j = -1;
+                }
+            }
+        }
+        var vx = (Math.random()-0.5)*3;
+        var vy = 1+Math.random()*5;
+        var gravity = 1;
+        var fraction = 0.2;
+        var color = colors[Math.floor(Math.random()*colors.length)]
+        var new_circle = new Circle(x, y, radius, vx, vy,color,gravity,fraction)
+        circles.push(new_circle)
+    }
+    return circles;
+}
 
 function circle_group(num){
     var circles = []
     for (i=0;i<=num;i++){
-        var circle = new_circle();
+        // var circle = new_circle();
+        var circle = circleNoOverlapping(circles);
         circles.push(circle)
     }
     return circles
@@ -172,7 +204,8 @@ function circle_group(num){
 var circles = [];
 function init(){
     circles = [];
-    circles = circle_group(300);
+    // circles = circle_group(10);
+    circles = circlesNoOverlapping(100);
 }
 // var circles = circle_group(500);
 init();
@@ -200,7 +233,7 @@ function anime(){
     requestAnimationFrame(anime);
     c.clearRect(0, 0, innerWidth, innerHeight);
     circles.forEach(function(circle){
-        circle.update();
+        circle.draw();
     })
 }
 anime();
